@@ -1,0 +1,324 @@
+{
+    "intents": [
+        { 
+    
+            "tag": "song_recommendation", 
+    
+            "patterns": ["Can you recommend a song?", "I need a new song to listen to", "What song should I listen to?","song"], 
+    
+            "responses": ["Sure! This are the Trending songs on spotify click on the link https://open.spotify.com/playlist/37i9dQZF1DXbVhgADFy3im?si=165ff37404c84edd."], 
+    
+            "context": [""] 
+    
+        }, 
+        { 
+    
+        "tag": "user_mode_identification", 
+    
+        "patterns": ["Hi","Hello"], 
+    
+        "responses": ["HI...! How are you? ","Hello..! How are you feeling today?","HI,How do you feel?"], 
+    
+        "context": [""] 
+    
+    },
+    { 
+    
+    "tag": "Happy", 
+    
+    "patterns": ["i am verry Happy","I’m good","Pretty good","I’m well"], 
+    
+    "responses": ["That's fantastic to hear! 🎉  I'd be happy to recommend some songs. Try this Songs 1) Senorita: https://open.spotify.com/track/3TAhWtQnpoL5Vl9VQPl9fU?si=3752779dca204a1b 2)Humraah (From Malang - Unleash The Madness): https://open.spotify.com/track/4xmkpE1Si5JL7NFxWrhV0S?si=9b52edf906914925  3)Sooraj Dooba Hain (Remix By Dj Kiran Kamath):https://open.spotify.com/track/0Kfooksbrhl5GytMKQ6TcK?si=077ebcf4dce041dc"], 
+    
+    "context": [""] 
+    
+    },
+    
+        { 
+    
+            "tag": "movie_recommendation", 
+    
+            "patterns": ["Suggest me a movie", "What movie should I watch?", "I'm in the mood for a movie"], 
+    
+            "responses": ["How about watching [Movie Title]?", "I recommend [Movie Title], it's great!", "You might enjoy [Movie Title]."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "book_recommendation", 
+    
+            "patterns": ["Recommend a book", "I want a new book to read", "What book should I pick up?"], 
+    
+            "responses": ["I suggest reading [Book Title] by [Author]. It's fantastic!", "You'll love [Book Title] by [Author].", "How about [Book Title] by [Author]? It's a great read."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "thanks", 
+    
+            "patterns": ["Thank you", "Thanks a lot", "Thanks for your help"], 
+    
+            "responses": ["You're welcome!", "No problem! If you need more recommendations, just ask.", "Glad I could help!"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "name", 
+    
+            "patterns": ["What's your name?", "May I know your name?", "Name, please"], 
+    
+            "responses": ["You can call me AeroOxy .", "I go by the name AeroOxy ."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "age", 
+    
+            "patterns": ["How old are you?", "What's your age?"], 
+    
+            "responses": ["I don't have an age since I'm a computer program.", "I'm ageless, just here to assist you."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "help", 
+    
+            "patterns": ["Can you help me?", "I need assistance", "Help, please"], 
+    
+            "responses": ["Of course, I'm here to help! What do you need assistance with?", "I'd be happy to assist you. What can I do for you today?"], 
+    
+            "context": [""] 
+    
+        },
+     
+    
+        { 
+    
+            "tag": "thanks", 
+    
+            "patterns": ["Thank you", "Thanks a lot", "Thanks for your help"], 
+    
+            "responses": ["You're welcome!", "No problem! If you need more assistance, feel free to ask.", "Glad I could help!"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": " developed ", 
+    
+            "patterns": ["By the way, who developed you?"], 
+    
+            "responses": ["I was developed by Sujit, Is there anything specific you'd like to know about my development?"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "weather", 
+    
+            "patterns": ["What's the weather like today?", "Tell me the weather forecast", "Is it going to rain?"], 
+    
+            "responses": ["I'm not able to provide real-time weather updates. You can check a weather website or app for the latest information."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "joke", 
+    
+            "patterns": ["Tell me a joke", "I could use a laugh", "Share a funny joke"], 
+    
+            "responses": ["Sure! Here's a joke: [Insert Joke Here]", "Why don't scientists trust atoms? Because they make up everything!"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "time", 
+    
+            "patterns": ["What time is it?", "Can you tell me the time?"], 
+    
+            "responses": ["I'm not able to provide real-time information. You can check the current time on your device."], 
+    
+            "context": [""] 
+    
+        } ,
+    { 
+    
+            "tag": "recipe_recommendation", 
+    
+            "patterns": ["What should I cook for dinner?", "Give me a recipe idea", "I need cooking inspiration"], 
+    
+            "responses": ["How about trying out a delicious [Recipe Name]?", "I recommend making [Recipe Name]. It's tasty and easy to prepare!", "You might enjoy cooking [Recipe Name]."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "news_update", 
+    
+            "patterns": ["What's the latest news?", "Give me a news update", "Tell me something interesting"], 
+    
+            "responses": ["I'm not able to provide real-time news updates. You can check a news website or app for the latest information."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+    { 
+    
+            "tag": "compliment", 
+    
+            "patterns": ["You're doing great", "You're awesome", "Good job"], 
+    
+            "responses": ["Thank you! I'm here to assist you.", "I'm here to help. Let me know if there's anything else you need."], 
+    
+            "context": [""] 
+    
+        } ,
+    { 
+    
+            "tag": "fun_fact", 
+    
+            "patterns": ["Tell me a fun fact", "Share an interesting fact", "Give me some trivia"], 
+    
+            "responses": ["Sure! Did you know that honey never spoils?", "Here's a fun fact: The shortest war in history was between Britain and Zanzibar on August 27, 1896. It lasted only 38 minutes!"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "painting_recommendation", 
+    
+            "patterns": ["Suggest a painting", "Recommend some artwork", "I need inspiration for a painting"], 
+    
+            "responses": ["I recommend checking out [Artist Name]'s [Painting Title]. It's truly inspiring!", "You might find [Painting Title] by [Artist Name] interesting for your project.", "Consider [Painting Title] by [Artist Name] for your inspiration."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "travel_tip", 
+    
+            "patterns": ["Give me a travel tip", "Any travel advice?", "I'm planning a trip"], 
+    
+            "responses": ["Certainly! When traveling, always carry a power bank for your devices.", "Here's a tip: Research local customs and etiquette before visiting a new place.", "Remember to pack a universal adapter for your electronic devices when traveling internationally."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "movie_quote", 
+    
+            "patterns": ["Give me a famous movie quote", "Quote from a film", "I want a memorable movie line"], 
+    
+            "responses": ["'Here's looking at you, kid.' - Casablanca", "'You can't handle the truth!' - A Few Good Men", "'I'll be back.' - The Terminator"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "funny_anecdote", 
+    
+            "patterns": ["Tell me a funny story", "Share a humorous anecdote", "I need a good laugh"], 
+    
+            "responses": ["Sure! One day, a cat decided to learn how to dance..."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "dessert_recommendation", 
+    
+            "patterns": ["Suggest a dessert", "Recommend a sweet treat", "I'm craving something sweet"], 
+    
+            "responses": ["How about trying a classic tiramisu?", "I recommend a decadent molten lava cake.", "You might enjoy a refreshing lemon tart."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "language_learning_tip", 
+    
+            "patterns": ["Give me a language learning tip", "How can I improve my language skills?", "Language learning advice"], 
+    
+            "responses": ["Practice speaking with native speakers as often as possible.", "Watch movies or TV shows in the target language for immersive learning.", "Set achievable goals and track your progress to stay motivated."], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "book_quote", 
+    
+            "patterns": ["Share a memorable book quote", "Quote from a novel", "Give me a literary line"], 
+    
+            "responses": ["'It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.' - Pride and Prejudice", "'In the beginning, God created the heavens and the earth.' - The Bible", "'All happy families are alike; each unhappy family is unhappy in its own way.' - Anna Karenina"], 
+    
+            "context": [""] 
+    
+        }, 
+    
+        { 
+    
+            "tag": "travel_destination", 
+    
+            "patterns": ["Recommend a travel destination", "Where should I go for my next trip?", "I need vacation ideas"], 
+    
+            "responses": ["You might love exploring the historic streets of Kyoto, Japan.", "Consider the beautiful beaches of Bali, Indonesia for a relaxing getaway.", "The vibrant culture and architecture of Barcelona, Spain make it a fantastic travel destination."], 
+    
+            "context": [""] 
+    
+        } ,
+    
+        {"tag": "goodbye", 
+    
+         "patterns": ["Bye", "See you later", "Goodbye", "Nice chatting to you, bye", "Till next time"], 
+    
+         "responses": ["See you!", "Have a nice day", "Bye! Come back again soon."], 
+    
+         "context":[""] 
+    
+    }
+
+    ]
+  }
+  
