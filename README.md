@@ -19,11 +19,8 @@ A music recommendation system that helps users discover new songs based on their
 - **NLTK**: Used for natural language processing to understand user intents.
 - **Keras**: For machine learning model to classify intents and recommend songs.
 
+<img width="1428" alt="ss1" src=https://github.com/user-attachments/assets/491be0bb-b07f-4f5b-b8c2-92a62c5000fc>
 
-
-<img width="1428" alt="ss1" src="https://github.com/sujitdhar014/Song_Recommendation_System/assets/81043297/a0b543f7-1c70-419e-a396-4c9391892078">
-
-<img width="1421" alt="ss2" src="https://github.com/sujitdhar014/Song_Recommendation_System/assets/81043297/705fd13b-f1a1-449d-a311-39b09fb31e03">
 <h4>Project Objectives- User Engagement</h4>
 <h4>Designed and implemented a Chatbot Song Recommender
 System recommendations and interactive chatbot conversations to
