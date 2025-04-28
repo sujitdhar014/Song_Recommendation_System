@@ -1,573 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chatbot & Recommendation System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- External stylesheet (if needed) -->
+    <link rel="stylesheet" href="/static/styles/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Chatbot</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="/static/styles/style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</head>
+    <!-- Inline CSS for layout and styling -->
+  </head>
 
-<body>
-
-  <div>
-    <div class="container">
-      <div class="first_div">
-        <h1>Song Recommendation System</h1>
+  <body>
+    <h1>Song Recommendation System</h1>
+    <!-- Main container with left (recommendation) and right (chatbot) sections -->
+    <div id="main_container">
+      <!-- Left: Recommendation Section -->
+      <div class="left_container">
         <h2>Recommended Songs:</h2>
 
-        <img id="dynamicImage" src="../static/styles/imgage/img_01.png"
-          style="height: 200px; position: relative; top: 5px; left: 30px;" alt="img 1"> <br>
+        <!-- Music Player Section -->
+        <!-- 
+        <div id="musicPlayer">
+          <audio id="audioPlayer" controls>
+            <source id="songSource" src="" type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>
+          <div>
+            <button id="prevSong">Previous</button>
+            <button id="playPauseBtn">Play</button>
+            <button id="nextSong">Next</button>
+          </div>
+        </div>-->
 
+        <div class="container">
+          <!-- Section with dynamic image change -->
+          <div class="first_div">
+            <div class="image-container">
+              <p style="text-align: center; font-size: 18px; margin-top: 20px">
+                <span style="text-transform: capitalize"
+                  >Discover your next favorite song!</span
+                >
+                🎶 <br />
+                Let the rhythm guide you — choose your mood and enjoy
+                personalized music recommendations.
+                <span>Your perfect song is just a click away! 🎧</span>
+              </p>
 
-        <script>
-          // Function to change the image source
-          function changeImages() {
-            changeImage = handleOptionClick('Songs Recommendation')
+              <img
+                id="dynamicImage"
+                src="../static/styles/imgage/img_01.png"
+                alt="Dynamic Image"
+              />
+            </div>
+            <br />
+            <script>
+              // Change image functions for different recommendation types
+              function changeImages() {
+                handleOptionClick("Songs Recommendation");
+                document.getElementById("dynamicImage").src =
+                  "../static/styles/imgage/music.jpg";
+              }
+              function changeImagesm() {
+                handleOptionClick("Movie Recommendation");
+                document.getElementById("dynamicImage").src =
+                  "../static/styles/imgage/movie.jpg";
+              }
+              function changeImagesb() {
+                handleOptionClick("Book Recommendation");
+                document.getElementById("dynamicImage").src =
+                  "../static/styles/imgage/book.jpg";
+              }
+            </script>
+          </div>
 
-            const imageElement = document.getElementById("dynamicImage");
-            imageElement.src = "../static/styles/imgage/music.jpg"; // Replace "chatbot.png" with the correct path to your new image
-          }
-          function changeImagesm() {
-            changeImage = handleOptionClick('Movie Recommendation')
+          <!-- Image grid that displays song recommendations -->
+          <div class="image-grid" id="imageGrid">
+            {% for song in songs %}
+            <div>
+              <h3>{{ song.song_name }}</h3>
+              <!-- Wrap the image in an anchor tag -->
+              <a href="{{ song.spotify_url }}" target="_blank">
+                <img
+                  src="{{ song.image_url }}"
+                  alt="{{ song.song_name }} Image"
+                  width="200px"
+                  onerror="this.onerror=null;this.src='/static/default.jpg';"
+                />
+              </a>
+            </div>
+            {% endfor %}
+          </div>
 
-            const imageElement = document.getElementById("dynamicImage");
-            imageElement.src = "../static/styles/imgage/movie.jpg"; // Replace "chatbot.png" with the correct path to your new image
-          }
-          function changeImagesb() {
-            changeImage = handleOptionClick('Book Recommendation')
+          <!-- Pagination controls for the recommendation grid -->
+          <div class="pagination">
+            <button id="prevBtn" class="pagination-btn" disabled>
+              Previous
+            </button>
+            <button id="nextBtn" class="pagination-btn">Next</button>
+          </div>
 
-            const imageElement = document.getElementById("dynamicImage");
-            imageElement.src = "../static/styles/imgage/book.jpg"; // Replace "chatbot.png" with the correct path to your new image
-          }
-        </script>
-      </div>
-      <style>
-        .hidden {
-          display: none;
-        }
-      </style>
-      <div id="chat" class="chat">
-        <!-- Chat messages will be displayed here -->
-      </div>
+          <script>
+            // Pagination JavaScript for recommendations
+            let currentPage = 1;
+            const imagesPerPage = 7; // Adjust the number of images per page
+            const imageGrid = document.getElementById("imageGrid");
+            const images = Array.from(imageGrid.children);
+            const totalImages = images.length;
+            const totalPages = Math.ceil(totalImages / imagesPerPage);
 
+            function showPage(page) {
+              images.forEach((imgDiv) => {
+                imgDiv.style.display = "none";
+              });
+              const startIndex = (page - 1) * imagesPerPage;
+              const endIndex = startIndex + imagesPerPage;
+              for (let i = startIndex; i < endIndex && i < totalImages; i++) {
+                images[i].style.display = "block";
+              }
+              document.getElementById("prevBtn").disabled = page === 1;
+              document.getElementById("nextBtn").disabled = page === totalPages;
+            }
 
-      <script>
-        // Get references to the button and div elements
-        var toggleButton = document.getElementById("toggleButton");
-        var div1 = document.getElementById("div1");
-        var div2 = document.getElementById("div2");
+            document
+              .getElementById("nextBtn")
+              .addEventListener("click", function () {
+                if (currentPage < totalPages) {
+                  currentPage++;
+                  showPage(currentPage);
+                }
+              });
 
-        // Add a click event listener to the button
-        toggleButton.addEventListener("click", function () {
-          // Check the current state of div2
-          if (div2.classList.contains("hidden")) {
-            // If div2 is hidden, show it and hide div1
-            div2.classList.remove("hidden");
-            div1.classList.add("hidden");
-          } else {
-            // If div2 is shown, hide it and show div1
-            div2.classList.add("hidden");
-            div1.classList.remove("hidden");
-          }
-        });
-      </script>
+            document
+              .getElementById("prevBtn")
+              .addEventListener("click", function () {
+                if (currentPage > 1) {
+                  currentPage--;
+                  showPage(currentPage);
+                }
+              });
 
-
-
-      <div class="image-grid">
-        {% for song in songs %}
-        <div class="image-item">
-          <h3>{{ song.song_name }}</h3>
-          {% if song.image_url %}
-          <a href="{{ song.spotify_url }}" target="_blank" rel="noopener noreferrer">
-            <img src="{{ song.image_url }}" alt="Song Image">
-          </a>
-          {% else %}
-          <p>No image available</p>
-          {% endif %}
+            showPage(currentPage);
+          </script>
         </div>
-        {% endfor %}
       </div>
 
-      <style>
-        .image-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          /* Create 4 columns */
-          gap: 10px;
-          /* Adjust the gap between images */
-        }
+      <!-- Right: Chatbot Section -->
+      <div class="right_container">
+        <h2>Recommended Songs:</h2>
+        <section class="msger">
+          <!-- Chatbot header with a reload button -->
+          <header class="msger-header">
+            <div class="msger-header-title">
+              <i class="fas fa-bug"></i> Chatbot <i class="fas fa-bug"></i>
+              <button id="reloadBtn" class="btn btn-secondary btn-lg">
+                Reload Page
+              </button>
+            </div>
+          </header>
 
-        .image-item {
-          text-align: center;
-          padding: 10px;
-        }
+          <!-- Chat messages display area -->
+          <main class="msger-chat">
+            <div class="msg left-msg">
+              <div
+                class="msg-img"
+                style="
+                  background-image: url(../static/styles/imgage/img_01.png);
+                "
+              ></div>
+              <div class="msg-bubble">
+                <div class="msg-info">
+                  <div class="msg-info-name">ChatBot</div>
+                  <div class="msg-info-time">12:45</div>
+                </div>
+                <div class="msg-text">
+                  Hello and welcome!! Let's dive together into a world of
+                  entertainment. Whether it's a song that moves you, a movie
+                  that captivates, or a book that enthralls, I've got you
+                  covered.
+                </div>
+              </div>
+            </div>
+          </main>
 
-        .image-item img {
-          width: 100%;
-          /* Make images fill their containers */
-          max-height: 150px;
-          /* Limit the maximum height of images */
-        }
-      </style>
+          <!-- Chat input area -->
+          <form class="msger-inputarea">
+            <input
+              type="text"
+              class="msger-input"
+              id="textInput"
+              placeholder="Enter your message..."
+            />
+            <button type="submit" class="msger-send-btn">Send</button>
+          </form>
+        </section>
+      </div>
     </div>
-  </div>
-  <!-- partial:index.partial.html -->
-  <section class="msger">
-    <header class="msger-header">
-      <div class="msger-header-title">
-        <i class="fas fa-bug"></i> Chatbot <i class="fas fa-bug"></i>
-        <button id="reloadBtn" class="btn btn-secondary btn-lg">Reload Page</button>
-      </div>
-    </header>
 
-    <main class="msger-chat">
-      <div class="msg left-msg">
-        <div class="msg-img" style="background-image: url(../static/styles/imgage/img_01.png);">
-        </div>
+    <!-- JavaScript for Chatbot and initial two-step greetings -->
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
+    <script>
+      // Global Chatbot variables
+      const BOT_IMG = "../static/styles/imgage/img_01.png";
+      const PERSON_IMG = "../static/styles/imgage/Sujit_sutradhar.jpg";
+      const BOT_NAME = "ChatBot";
+      const PERSON_NAME = "You";
 
-        <div class="msg-bubble">
-          <div class="msg-info">
-            <div class="msg-info-name">ChatBot</div>
-            <div class="msg-info-time">12:45</div>
+      // Get Chatbot form elements
+      const msgerForm = document.querySelector(".msger-inputarea");
+      const msgerInput = document.querySelector(".msger-input");
+      const msgerChat = document.querySelector(".msger-chat");
+
+      // Send a message when the form is submitted
+      msgerForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const msgText = msgerInput.value;
+        if (!msgText) return;
+        appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+        msgerInput.value = "";
+        botResponse(msgText);
+      });
+
+      // Append a new message to the chat
+      function appendMessage(name, img, side, text) {
+        const msgHTML = `
+          <div class="msg ${side}-msg">
+            <div class="msg-img" style="background-image: url(${img})"></div>
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">${name}</div>
+                <div class="msg-info-time">${formatDate(new Date())}</div>
+              </div>
+              <div class="msg-text">${text}</div>
+            </div>
           </div>
-
-          <div class="msg-text">
-            Hello and welcome!! Lets dive together into a world of entertainment.
-            Whether it's a song that moves you, a movie that captivates, or a book that enthralls,
-            I've got you covered.
-          </div>
-        </div>
-      </div>
-
-
-
-    </main>
-
-    <form class="msger-inputarea">
-      <input type="text" class="msger-input" id="textInput" placeholder="Enter your message...">
-      <button type="submit" class="msger-send-btn">Send</button>
-    </form>
-    <!-- <button class="suggestion" onclick="handleOptionClick('Songs Recommendation')">Songs 🎵</button> -->
-
-
-
-  </section>
-
-  <script>
-    document.getElementById("first_div").onclick = function () {
-      document.getElementById("first_div").style.display = "none";
-    }
-  </script>
-
-  <script>
-    // Reload Button Event Listener
-    const reloadBtn = document.getElementById("reloadBtn");
-    reloadBtn.addEventListener("click", () => {
-      location.reload(); // Reload the page
-    });
-  </script>
-
-  <script>
-    const initialMessage = "Get ready to uncover some amazing recommendations.";
-
-    // Function to simulate chatbot sending a message
-    function sendInitialMessage() {
-      setTimeout(() => {
-        appendMessage(BOT_NAME, BOT_IMG, "left", initialMessage);
-      }, 1000); // Delay for 1 second before sending the message
-    }
-
-    // Call the sendInitialMessage function to send the initial message
-    sendInitialMessage();
-
-    // Function to simulate chatbot sending a message with options
-    function sendInitialMessageWithOptions() {
-      const initialMessageWithOptions = ` What's your preference today?
-      <div class="suggestions" id="suggestions">
-        <button id="toggleButton" class="suggestion " onclick="changeImages()">Songs 🎵</button>
-        <button id="toggleButton" class="suggestion " onclick="changeImagesm()">Movie 🎬</button>
-        <button id="toggleButton" class="suggestion " onclick="changeImagesb()">Books 📚</button>
-        <button class="suggestion" onclick="handleOptionClick('Movie Recommendation')">Movie2 🎬</button>
-        <button class="suggestion" onclick="handleOptionClick('Book Recommendation')">Books2 📚</button>
-        <button class="suggestion" onclick="handleOptionClick('Other')">Other 😄</button>
-      </div>`;
-
-      setTimeout(() => {
-        appendMessage(BOT_NAME, BOT_IMG, "left", initialMessageWithOptions);
-      }, 2000); // Delay for 2 seconds before sending the message
-    }
-
-    // Call the sendInitialMessageWithOptions function to send the initial message with options
-    sendInitialMessageWithOptions();
-
-    // Function to handle option clicks
-    function handleOptionClick(optionText) {
-      // Simulate user clicking an option
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", optionText);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      // Simulate chatbot response based on the selected option
-      let chatbotResponse;
-
-      switch (optionText) {
-        case "Songs Recommendation":
-          chatbotResponse = "You selected: Songs Recommendation. Here are new options:";
-          imageUrl = "song-image.png";
-          const newOptionsHTML = `
-          <h5>Would you love to describe me your overall mood today?</h5>
-          <h5>This will help me suggest songs that align with your feelings!</h5>
-          <h5>So here we go....</h5>
-
-          <label for="optionSelect">Select an option:</label>
-          <select id="optionSelect" onchange="toggleStartConversation()">
-            <option value="SelectOption">Select an option</option>
-            <option value="happy">Happy/Energetic</option>
-            <option value="sad">Sad/Reflective</option>
-            <option value="relax">Relaxed/Chill</option>
-            <option value="motivational">Motivational/Inspiring</option>
-            <option value="romantic">Romantic/Love</option>
-            <option value="epic">Epic/Powerful</option>
-            <option value="euphoric">Euphoric/Upbeat</option>
-            <option value="nostalgic">Nostalgic/Sentimental</option>
-            <option value="spiritual">Spiritual</option>
-            <option value="patriotic">Patriotic</option>
-          </select>
-          <button id="startConversation" style="display: none;" onclick="startConversation()">Start Conversation</button>
-          <form method="POST" action="/">
-          <label for="names">Enter a song name:</label>
-          <input type="text" name="names" id="names">
-          <input type="submit" value="Recommend">
-      </form> -->
         `;
-          // <div class="container"></div>
-          appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-          appendMessage(BOT_NAME, BOT_IMG, "left", newOptionsHTML);
-          // appendMessage(PERSON_NAME, PERSON_IMG, "right", optionText);
-          break;
-        case "Movie Recommendation":
-          chatbotResponse = "You selected: Movie Recommendation. Here are new options:";
-          imageUrl = "movie-image.png"; // Provide the path to your movie image
-          const movieOptionsHTML = "i am under process SELECT SONGS "; `
-                <!-- ... Your content for movie recommendations ... -->
-            `;
-          appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-          appendMessage(BOT_NAME, BOT_IMG, "left", movieOptionsHTML);
-          break;
-        case "Book Recommendation":
-          chatbotResponse = "You selected: Book Recommendation. Here are new options:";
-          imageUrl = "movie-image.png"; // Provide the path to your movie image
-          const bookOptionsHTML = `
-                <!-- ... Your content for Book recommendations ... -->
-            `;
-          appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-          appendMessage(BOT_NAME, BOT_IMG, "left", bookOptionsHTML);
-          break;
-
-
-        case "happy":
-          chatbotResponse = "Can you tell me about something that recently made you feel really happy or content?";
-          appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-          break;
-        case "sad":
-          chatbotResponse = "Can you tell me about something that recently made you feel really happy or content?";
-          appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-          break;
-
-        // Add cases for other options here
-
-        default:
-          chatbotResponse = "I'm sorry, I didn't understand your choice.";
-          appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-          break;
+        msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+        msgerChat.scrollTop += 500;
       }
 
-    }
-
-
-
-
-
-
-
-    // Function to toggle the display of the "Start Conversation" button
-    function toggleStartConversation() {
-      const optionSelect = document.getElementById("optionSelect");
-      const startConversationButton = document.getElementById("startConversation");
-
-      if (optionSelect.value === "SelectOption") {
-        startConversationButton.style.display = "none";
-      } else {
-        startConversationButton.style.display = "block";
-      }
-    }
-    // Global variable to store user responses
-    let userAnswers = [];
-
-    // Function to handle the "Start Conversation" button click
-    function startConversation() {
-      const selectedOption = document.getElementById("optionSelect").value;
-
-      // Handle the selected option here
-
-      // You can also update the chat with the bot's response based on the selected option
-      const chatbotResponse = "You selected: " + selectedOption;
-      appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
-
-      // Check for multiple conditions
-      if (chatbotResponse.toLowerCase().includes("happy")) {
-        // Case 1: Handle when the user's response includes "happy"
-        const happinessQuestion = "Can you tell me about something that recently made you feel really happy or content?";
-        appendMessage(BOT_NAME, BOT_IMG, "left", happinessQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("sad")) {
-        // Case 2: Handle when the user's response includes "sad"
-        const sadnessQuestion = "I'm sorry to hear that. Would you like to talk about it? or sad";
-        appendMessage(BOT_NAME, BOT_IMG, "left", sadnessQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("relax")) {
-        // Case 3: Handle when the user's response includes "excited"
-        const relaxQuestion = "That's great! relax";
-        appendMessage(BOT_NAME, BOT_IMG, "left", relaxQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("motivational")) {
-        // Case 4: Handle when the user's response includes "excited"
-        const MotivationalQuestion = "That's great! What's making you Motivational";
-        appendMessage(BOT_NAME, BOT_IMG, "left", MotivationalQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("romantic")) {
-        // Case 5: Handle when the user's response includes "excited"
-        const RomanticQuestion = "That's great! What's making you romantic";
-        appendMessage(BOT_NAME, BOT_IMG, "left", RomanticQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("epic")) {
-        // Case 6: Handle when the user's response includes "excited"
-        const epicQuestion = "That's great! What's making you epic";
-        appendMessage(BOT_NAME, BOT_IMG, "left", epicQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("euphoric")) {
-        // Case 7: Handle when the user's response includes "excited"
-        const EuphoricQuestion = "That's great! Euphoric/Upbeat";
-        appendMessage(BOT_NAME, BOT_IMG, "left", EuphoricQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("nostalgic")) {
-        // Case 8: Handle when the user's response includes "excited"
-        const NostalgicQuestion = "That's great! Nostalgic/Sentimental";
-        appendMessage(BOT_NAME, BOT_IMG, "left", NostalgicQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("spiritual:")) {
-        // Case 9: Handle when the user's response includes "excited"
-        const SpiritualQuestion = "That's great! Spiritual:";
-        appendMessage(BOT_NAME, BOT_IMG, "left", SpiritualQuestion);
-      } else if (chatbotResponse.toLowerCase().includes("patriotic")) {
-        // Case 10: Handle when the user's response includes "excited"
-        const PatrioticQuestion = "That's great! Patriotic";
-        appendMessage(BOT_NAME, BOT_IMG, "left", PatrioticQuestion);
-
-      } else {
-        // Default case: Handle when none of the conditions match
-        const defaultResponse = "I'm here to chat. Is there anything specific you'd like to talk about?";
-        appendMessage(BOT_NAME, BOT_IMG, "left", defaultResponse);
+      // Fetch chatbot response (from endpoint "/get")
+      function botResponse(rawText) {
+        $.get("/get", { msg: rawText }).done(function (data) {
+          const msgText = data;
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+        });
       }
 
-
-    }
-
-    // Function to get and process the user's response
-    function getUserResponse() {
-      const userResponseElement = document.getElementById("userResponse");
-      const userResponse = userResponseElement.value;
-
-      // Display the user's response in the chat
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", userResponse);
-
-      // Store the user's response in the userAnswers array
-      userAnswers.push(userResponse);
-
-      // Ask the next question based on the current conversation state
-      askNextQuestion();
-    }
-
-    // Function to ask the next question based on the current conversation state
-    function askNextQuestion() {
-      // You can implement logic to determine the next question based on the user's answers and the current conversation state
-
-      // For example, you can check the last question asked and ask the next relevant question
-      const lastQuestion = userAnswers[userAnswers.length - 1];
-
-      // Determine the next question based on the last question
-      let nextQuestion;
-
-      if (lastQuestion.toLowerCase().includes("happy")) {
-        // Ask a follow-up question related to happiness
-        nextQuestion = "What specifically about that made you happy?";
-      } else {
-        // Handle other questions or conversation flow
+      // Utility function to format time in hh:mm format
+      function formatDate(date) {
+        const h = "0" + date.getHours();
+        const m = "0" + date.getMinutes();
+        return `${h.slice(-2)}:${m.slice(-2)}`;
       }
 
-      // Ask the next question if it exists
-      if (nextQuestion) {
-        appendMessage(BOT_NAME, BOT_IMG, "left", nextQuestion);
+      // Initial two-step chatbot greeting
 
-        // Add an input field for the user to enter their answer
-        const inputField = `
-      <input type="text" id="userResponse" placeholder="Type your response">
-      <button onclick="getUserResponse()">Submit</button>
-    `;
-        appendMessage(BOT_NAME, BOT_IMG, "left", inputField);
-
-        // Store the current question in the userAnswers array
-        userAnswers.push(nextQuestion);
-      } else {
-        // End the conversation or handle other scenarios
+      // Step 1: Basic introductory message
+      const initialMessage =
+        "Get ready to uncover some amazing recommendations.";
+      function sendInitialMessage() {
+        setTimeout(() => {
+          appendMessage(BOT_NAME, BOT_IMG, "left", initialMessage);
+        }, 1000);
       }
-    }
+      sendInitialMessage();
 
+      // Step 2: Options message with suggestions
+      function sendInitialMessageWithOptions() {
+        const initialMessageWithOptions = `What's your preference today?
+          <div class="suggestions" id="suggestions">
+            <button class="suggestion" onclick="changeImages()">Songs 🎵</button>
+            <button class="suggestion" onclick="changeImagesm()">Movie 🎬</button>
+            <button class="suggestion" onclick="changeImagesb()">Books 📚</button>
+            <button class="suggestion" onclick="handleOptionClick('Movie Recommendation')">Movie2 🎬</button>
+            <button class="suggestion" onclick="handleOptionClick('Book Recommendation')">Books2 📚</button>
+            <button class="suggestion" onclick="handleOptionClick('Other')">Other 😄</button>
+          </div>`;
+        setTimeout(() => {
+          appendMessage(BOT_NAME, BOT_IMG, "left", initialMessageWithOptions);
+        }, 2000);
+      }
+      sendInitialMessageWithOptions();
 
+      // Function to handle suggestion option clicks from the chatbot
+      function handleOptionClick(optionText) {
+        appendMessage(PERSON_NAME, PERSON_IMG, "right", optionText);
+        let chatbotResponse;
+        switch (optionText) {
+          case "Songs Recommendation":
+            chatbotResponse =
+              "You selected: Songs Recommendation. Here are new options:";
+            const newOptionsHTML = `
+              <h5>Would you love to describe your overall mood today?</h5>
+              <h5>This will help me suggest songs that align with your feelings!</h5>
+              <h5>So here we go....</h5>
+              <label for="optionSelect">Select an option:</label>
+              <select id="optionSelect" onchange="toggleStartConversation()">
+                <option value="SelectOption">Select an option</option>
+                <option value="happy">Happy/Energetic</option>
+                <option value="sad">Sad/Reflective</option>
+                <option value="relax">Relaxed/Chill</option>
+                <option value="motivational">Motivational/Inspiring</option>
+                <option value="romantic">Romantic/Love</option>
+                <option value="epic">Epic/Powerful</option>
+                <option value="euphoric">Euphoric/Upbeat</option>
+                <option value="nostalgic">Nostalgic/Sentimental</option>
+                <option value="spiritual">Spiritual</option>
+                <option value="patriotic">Patriotic</option>
+              </select>
+              <button id="startConversation" style="display: none;" onclick="startConversation()">Start Conversation</button>
+              <form method="POST" action="/">
+                <label for="names">Enter a song name:</label>
+                <input type="text" name="names" id="names">
+                <input type="submit" value="Recommend">
+              </form>`;
+            appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
+            appendMessage(BOT_NAME, BOT_IMG, "left", newOptionsHTML);
+            break;
+          case "Movie Recommendation":
+            chatbotResponse =
+              "You selected: Movie Recommendation. Here are new options:";
+            const movieOptionsHTML =
+              "Content for movie recommendations coming soon...";
+            appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
+            appendMessage(BOT_NAME, BOT_IMG, "left", movieOptionsHTML);
+            break;
+          case "Book Recommendation":
+            chatbotResponse =
+              "You selected: Book Recommendation. Here are new options:";
+            const bookOptionsHTML =
+              "Content for book recommendations coming soon...";
+            appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
+            appendMessage(BOT_NAME, BOT_IMG, "left", bookOptionsHTML);
+            break;
+          default:
+            chatbotResponse = "I'm sorry, I didn't understand your choice.";
+            appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
+            break;
+        }
+      }
 
+      // Toggle visibility of "Start Conversation" button based on dropdown selection
+      function toggleStartConversation() {
+        const optionSelect = document.getElementById("optionSelect");
+        const startConversationButton =
+          document.getElementById("startConversation");
+        if (optionSelect.value === "SelectOption") {
+          startConversationButton.style.display = "none";
+        } else {
+          startConversationButton.style.display = "block";
+        }
+      }
 
+      // Start a conversation based on the selected option
+      let userAnswers = [];
+      function startConversation() {
+        const selectedOption = document.getElementById("optionSelect").value;
+        const chatbotResponse = "You selected: " + selectedOption;
+        appendMessage(BOT_NAME, BOT_IMG, "left", chatbotResponse);
+        // Example branching: you can customize questions based on the option
+        if (chatbotResponse.toLowerCase().includes("happy")) {
+          const happinessQuestion =
+            "Can you tell me about something that recently made you feel really happy or content?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", happinessQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("sad")) {
+          const sadnessQuestion =
+            "I'm sorry to hear that. Would you like to talk about it?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", sadnessQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("relax")) {
+          const relaxQuestion =
+            "That's great! Tell me more about your relaxed mood.";
+          appendMessage(BOT_NAME, BOT_IMG, "left", relaxQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("motivational")) {
+          const motivationalQuestion = "What's making you feel motivated?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", motivationalQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("romantic")) {
+          const romanticQuestion = "What's making you feel romantic today?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", romanticQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("epic")) {
+          const epicQuestion = "What's making you feel epic?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", epicQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("euphoric")) {
+          const euphoricQuestion =
+            "Share what makes you feel euphoric or upbeat!";
+          appendMessage(BOT_NAME, BOT_IMG, "left", euphoricQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("nostalgic")) {
+          const nostalgicQuestion = "Tell me what makes you feel nostalgic.";
+          appendMessage(BOT_NAME, BOT_IMG, "left", nostalgicQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("spiritual")) {
+          const spiritualQuestion = "What spiritual thoughts are on your mind?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", spiritualQuestion);
+        } else if (chatbotResponse.toLowerCase().includes("patriotic")) {
+          const patrioticQuestion = "What makes you feel patriotic today?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", patrioticQuestion);
+        } else {
+          const defaultResponse =
+            "I'm here to chat. Is there anything specific you'd like to talk about?";
+          appendMessage(BOT_NAME, BOT_IMG, "left", defaultResponse);
+        }
+      }
 
-  </script>
-
-
-
-
-
-
-
-
-  <!-- partial -->
-  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
-  <script>
-
-    const msgerForm = get(".msger-inputarea");
-    const msgerInput = get(".msger-input");
-    const msgerChat = get(".msger-chat");
-
-
-    // Icons made by Freepik from www.flaticon.com
-    const BOT_IMG = "../static/styles/imgage/img_01.png";
-    const PERSON_IMG = "../static/styles/imgage/Sujit_sutradhar.jpg";
-    const BOT_NAME = "    ChatBot";
-    const PERSON_NAME = "You";
-
-    msgerForm.addEventListener("submit", event => {
-      event.preventDefault();
-
-      const msgText = msgerInput.value;
-      if (!msgText) return;
-
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
-      msgerInput.value = "";
-      botResponse(msgText);
-    });
-
-    function appendMessage(name, img, side, text) {
-      //   Simple solution for small apps
-      const msgHTML = `
-<div class="msg ${side}-msg">
-  <div class="msg-img" style="background-image: url(${img})"></div>
-
-  <div class="msg-bubble">
-    <div class="msg-info">
-      <div class="msg-info-name">${name}</div>
-      <div class="msg-info-time">${formatDate(new Date())}</div>
-    </div>
-
-    <div class="msg-text">${text}</div>
-  </div>
-</div>
-`;
-
-      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-      msgerChat.scrollTop += 500;
-    }
-
-    function botResponse(rawText) {
-
-      // Bot Response
-      $.get("/get", { msg: rawText }).done(function (data) {
-        console.log(rawText);
-        console.log(data);
-        const msgText = data;
-        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-
+      // Reload page event handler
+      const reloadBtn = document.getElementById("reloadBtn");
+      reloadBtn.addEventListener("click", () => {
+        location.reload();
       });
-
-    }
-
-
-    // Utils
-    function get(selector, root = document) {
-      return root.querySelector(selector);
-    }
-
-    function formatDate(date) {
-      const h = "0" + date.getHours();
-      const m = "0" + date.getMinutes();
-
-      return `${h.slice(-2)}:${m.slice(-2)}`;
-    }
-
-
-
-  </script>
-
-
-  <script>
-    // ...
-
-    // const msgerForm = get(".msger-inputarea");
-    // const msgerInput = get(".msger-input");
-    // const msgerChat = get(".msger-chat");
-
-    msgerForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const songInput = document.getElementById("songInput");
-      const songName = songInput.value;
-
-      if (!songName) return;
-
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", songName);
-
-      // Make an AJAX request to get song recommendations
-      $.ajax({
-        type: "POST",
-        url: "/get_song_recommendations",
-        data: { song_name: songName },
-        success: function (response) {
-          // Append chatbot responses and song recommendations to the chat interface
-          appendChatbotResponses(response.chatbot_response_text);
-          songInput.value = ""; // Clear the song input field
-        },
-        error: function () {
-          alert("An error occurred while getting song recommendations.");
-        },
-      });
-    });
-
-    function appendChatbotResponses(responses) {
-      responses.forEach(function (response) {
-        appendMessage(BOT_NAME, BOT_IMG, "left", response);
-      });
-    }
-
-
-  </script>
-  <!-- if songs -->
-
-
-
-
-</body>
-
+    </script>
+  </body>
 </html>
